@@ -15,7 +15,11 @@
 .text-shadow{
     text-shadow: 15px 15px 30px #000;
 }
+.hide {
 
+  top: -9999px !important;
+  //left: -9999px !important;
+}
 
 body {
   padding:0;
@@ -23,5 +27,36 @@ body {
   font-family: @text;
 }
 
+.whatiftop {
+  position: absolute;
+  top:0px;
+  left:0px;
+  width: 100%;
+  z-index: 500;
+  color: white;
+  background-color: @main;
+  position: fixed;
+
+  h1 {
+    font-family: @heading;
+    font-size: 48px;
+    color:#fff;
+    text-align:center;
+    // margin: 85px auto;
+    z-index:2;
+    // line-height: 100px;
+    .text-shadow;
+  }
+}
+
 @import "../Sections/WhateIfHeader/whatif.less";
 @import "../Sections/double/double.less";
+
+
+
+//delete when finished
+.fillspace {
+  min-height:600px;
+
+
+}
