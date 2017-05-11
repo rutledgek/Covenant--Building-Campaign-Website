@@ -10,9 +10,10 @@ sr.reveal('.left', {
 })
 
 sr.reveal('.right', {
+  delay: 200,
   duration: 2000,
-  origin: 'right',
-  distance: '100px',
+  origin: 'bottom',
+  distance: '50px',
   easing: 'ease-out',
   mobile: false,
 
