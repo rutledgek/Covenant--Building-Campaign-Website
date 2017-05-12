@@ -18,3 +18,6 @@ $(window).resize(function(){
 });
 
 $(".panel-heading").css('display','none');
+
+
+$( '#nav-toggle' ).click(function() {$( '#toggle-navigation' ).toggleClass( 'clicked',500,"linear" )});
