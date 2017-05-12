@@ -5,7 +5,6 @@ sr.reveal('#doubletitle', {
   origin: 'top',
   // distance: '100px',
   easing: 'ease-out',
-  mobile: false,
 })
 
 sr.reveal('.left', {
@@ -14,8 +13,6 @@ sr.reveal('.left', {
   origin: 'left',
   distance: '100px',
   easing: 'ease-out',
-  mobile: false,
-
 })
 
 sr.reveal('.right', {
@@ -24,6 +21,4 @@ sr.reveal('.right', {
   origin: 'bottom',
   distance: '50px',
   easing: 'ease-out',
-  mobile: false,
-
 })
