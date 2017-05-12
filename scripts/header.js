@@ -16,4 +16,5 @@ $(window).resize(function(){
     $('#left').insertBefore('#right');
   }
 });
-$(.panel-heading).css('display','none')
+
+$(".panel-heading").css('display','none');
