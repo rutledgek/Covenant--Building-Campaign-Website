@@ -1,0 +1,443 @@
+var RockCodeEditor = function (context, keepEditorContent) {
+    var ui = $.summernote.ui;
+    var $codeEditor = $('#codeeditor-div-' + context.options.codeEditorOptions.controlId);
+    var $codeEditorContainer = $codeEditor.closest('.code-editor-container');
+    $codeEditorContainer.hide();
+    $codeEditorContainer.height(context.layoutInfo.editingArea.height());
+    $inCodeEditorModeHiddenField = $('#' + context.options.codeEditorOptions.inCodeEditorModeHiddenFieldId);
+    $inCodeEditorModeHiddenField.val("0");
+
+    // move code editor into summernote div
+    var element = $codeEditorContainer.detach();
+    context.layoutInfo.editingArea.closest('.note-editor').append(element);
+
+    // create button
+    var button = ui.button({
+        contents: '<i class="fa fa-file-code-o"/>',
+        tooltip: 'Code Editor',
+        className: 'btn-codeview', // swap out the default btn-codeview with the RockCodeEditor
+        click: function () {
+            if ($codeEditorContainer.is(':visible')) {
+                context.invoke('toolbar.updateCodeview', true);
+                var content = ace.edit($codeEditor.attr('id')).getValue();
+                context.code(content);
+                context.layoutInfo.editingArea.show();
+                context.layoutInfo.statusbar.show();
+                $codeEditorContainer.hide();
+                $inCodeEditorModeHiddenField.val("0");
+                context.invoke('toolbar.updateCodeview', false);
+            } else {
+                $codeEditorContainer.height(context.layoutInfo.editingArea.height());
+
+                // make sure it has at least some usable height
+                if ($codeEditorContainer.height() < 100) {
+                    $codeEditorContainer.height(100)
+                }
+
+                context.layoutInfo.editingArea.hide();
+                context.layoutInfo.statusbar.hide();
+
+                // HtmlEditor.cs will initialize this with keepEditorContent = true and set the codeEditor content instead of the summernoteNote editor content
+                // this will prevent bad html or scripts from trying to render when startInCodeEditor mode is enabled
+                if (!keepEditorContent) {
+                    var content = context.code();
+                    ace.edit($codeEditor.attr('id')).setValue(content);
+                }
+                $codeEditorContainer.show();
+
+                // set the hiddenfield so we know which editor to get the value from on postback
+                $inCodeEditorModeHiddenField.val("1");
+                context.invoke('toolbar.updateCodeview', true);
+            }
+        }
+    });
+
+    return button.render();   // return button as jquery object 
+};
+var RockFileBrowser = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: '<i class="fa fa-file-text-o"/>',
+        tooltip: 'File Browser',
+        click: function () {
+            context.invoke('editor.saveRange');
+            var iframeUrl = Rock.settings.get('baseUrl') + "htmleditorplugins/rockfilebrowser";
+            iframeUrl += "?rootFolder=" + encodeURIComponent(context.options.rockFileBrowserOptions.documentFolderRoot);
+            iframeUrl += "&browserMode=doc";
+            iframeUrl += "&fileTypeBlackList=" + encodeURIComponent(context.options.rockFileBrowserOptions.fileTypeBlackList);
+            iframeUrl += "&theme=" + context.options.rockTheme;
+            iframeUrl += "&modalMode=1";
+            iframeUrl += "&title=Select%20File";
+
+            Rock.controls.modal.show(context.layoutInfo.editor, iframeUrl);
+
+            $modalPopupIFrame = Rock.controls.modal.getModalPopupIFrame();
+
+            $modalPopupIFrame.load(function () {
+
+                $modalPopupIFrame.contents().off('click');
+
+                $modalPopupIFrame.contents().on('click', '.js-select-file-button', function (e) {
+                    Rock.controls.modal.close();
+                    var fileResult = $(e.target).closest('body').find('.js-filebrowser-result input[type=hidden]').val();
+                    if (fileResult) {
+
+                        // iframe returns the result in the format "href|text"
+                        var resultParts = fileResult.split('|');
+
+                        context.invoke('editor.restoreRange');
+                        context.invoke('editor.createLink', {
+                            text: resultParts[1],
+                            url: Rock.settings.get('baseUrl') + resultParts[0],
+                            newWindow: false
+                        });
+                    }
+                });
+
+                $modalPopupIFrame.contents().on('click', '.js-cancel-file-button', function () {
+                    Rock.controls.modal.close();
+                });
+            });
+
+            
+        }
+    });
+
+    if (context.options.rockFileBrowserOptions.enabled) {
+        return button.render();   // return button as jquery object 
+    }
+    else {
+        return null;
+    }
+};
+var RockImageBrowser = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: '<i class="fa fa-picture-o"/>',
+        tooltip: 'Image Browser',
+        click: function () {
+
+            context.invoke('editor.saveRange');
+            var iframeUrl = Rock.settings.get('baseUrl') + "htmleditorplugins/rockfilebrowser";
+            iframeUrl += "?rootFolder=" + encodeURIComponent(context.options.rockFileBrowserOptions.imageFolderRoot);
+            iframeUrl += "&browserMode=image";
+            iframeUrl += "&fileTypeBlackList=" + encodeURIComponent(context.options.rockFileBrowserOptions.fileTypeBlackList);
+            iframeUrl += "&imageFileTypeWhiteList=" + encodeURIComponent(context.options.rockFileBrowserOptions.imageFileTypeWhiteList);
+            iframeUrl += "&theme=" + context.options.rockTheme;
+            iframeUrl += "&modalMode=1";
+            iframeUrl += "&title=Select%20Image";
+
+            Rock.controls.modal.show(context.layoutInfo.editor, iframeUrl);
+
+            $modalPopupIFrame = Rock.controls.modal.getModalPopupIFrame();
+
+            $modalPopupIFrame.load(function () {
+
+                $modalPopupIFrame.contents().off('click');
+
+                $modalPopupIFrame.contents().on('click', '.js-select-file-button', function (e) {
+                    Rock.controls.modal.close();
+                    var fileResult = $(e.target).closest('body').find('.js-filebrowser-result input[type=hidden]').val();
+                    if (fileResult) {
+                        // iframe returns the result in the format "imageSrcUrl|imageAltText"
+                        var resultParts = fileResult.split('|');
+                        var imageElement = document.createElement('img');
+                        var url = Rock.settings.get('baseUrl') + resultParts[0];
+                        var altText = resultParts[1];
+                        
+                        var imgTarget = context.invoke('editor.restoreTarget');
+                        // if they already have an img selected, just change the src of the image
+                        if (imgTarget) {
+                            imgTarget.src = url;
+                            imgTarget.alt = altText;
+                        }
+                        else {
+                            // insert the image at 25% to get them started
+                            context.invoke('editor.restoreRange');
+                            context.invoke('editor.insertImage', url, function ($image) {
+                                $image.css('width', '25%');
+                                $image.attr('alt', altText);
+                            });
+                        }
+                    }
+                });
+
+                $modalPopupIFrame.contents().on('click', '.js-cancel-file-button', function () {
+                    Rock.controls.modal.close();
+                });
+            });
+        }
+    });
+
+    if (context.options.rockFileBrowserOptions.enabled) {
+        return button.render();   // return button as jquery object 
+    }
+    else {
+        return null;
+    }
+};
+var RockMergeField = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: '{ }',
+        tooltip: 'Merge Field',
+        click: function () {
+            context.invoke('editor.saveRange');
+            var iframeUrl = Rock.settings.get('baseUrl') + "htmleditorplugins/RockMergeField?mergeFields=" + encodeURIComponent(context.options.rockMergeFieldOptions.mergeFields);
+            iframeUrl += "&theme=" + context.options.rockTheme;
+            iframeUrl += "&modalMode=1";
+
+            Rock.controls.modal.show(context.layoutInfo.editor, iframeUrl);
+
+            $modalPopupIFrame = Rock.controls.modal.getModalPopupIFrame();
+
+            $modalPopupIFrame.load(function () {
+
+                $modalPopupIFrame.contents().off('click');
+
+                $modalPopupIFrame.contents().on('click', '.js-select-mergefield-button', function () {
+                    Rock.controls.modal.close();
+
+                    var mergeFields = $('body iframe').contents().find('.js-mergefieldpicker-result input[type=hidden]').val();
+                    var url = Rock.settings.get('baseUrl') + 'api/MergeFields/' + encodeURIComponent(mergeFields);
+                    $.get(url, function (data) {
+                        {
+                            context.invoke('editor.restoreRange');
+                            context.invoke('editor.pasteHTML', data);
+                        }
+                    });
+                });
+
+                $modalPopupIFrame.contents().on('click', '.js-cancel-mergefield-button', function () {
+                    Rock.controls.modal.close();
+                });
+            });
+
+            
+        }
+    });
+    
+    if (context.options.rockMergeFieldOptions.enabled) {
+        return button.render();   // return button as jquery object 
+    }
+    else {
+        return null;
+    }
+};
+var RockPasteFromWord = function (context) {
+    var ui = $.summernote.ui;
+
+    $(context.layoutInfo.note).on('summernote.paste', function (we, e) {
+        // catch the paste event and do either the rockpastetext or rockpastefromword if we can figure out if they are pasting from word
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            // if they are using IE. Sorry, they'll have to use the pastefromword button since IE doesn't tell us what type of data is getting pasted
+            e.preventDefault();
+            context.layoutInfo.toolbar.find('.js-rockpastetext').click();
+        } else {
+            var clipboardData = ((typeof (e.originalEvent.clipboardData) != 'undefined' && e.originalEvent.clipboardData) || (typeof (window.clipboardData) != 'undefined' && window.clipboardData));
+            if (clipboardData) {
+                var types = clipboardData.types;
+                if (((types instanceof DOMStringList) && types.contains("text/rtf")) || (types.indexOf && types.indexOf('text/rtf') !== -1)) {
+                    e.preventDefault();
+                    doPasteFromWord(e, "text/html");
+                } else {
+                    // sometimes Microsoft Edge will support the clipboardData api, but doesn't tell us about types other than html/plain
+                    e.preventDefault();
+                    doPasteFromWord(e, "text/plain");
+                }
+
+            } else {
+                // if the browser doesn't have a Clipboard API, always prompt since we don't know what is on the clipboard and we don't want word data (should only happen on MS Edge)
+                // As of 7/15/2016, Microsoft Edge doesn't have ClipboardAPI! see https://developer.microsoft.com/en-us/microsoft-edge/platform/status/clipboardapi
+                e.preventDefault();
+                context.layoutInfo.toolbar.find('.js-rockpastetext').click();
+            }
+        }
+    });
+
+
+    // from https://github.com/StudioJunkyard/summernote-cleaner
+    var cleanText = function (txt) {
+        var sS = /(\n|\r| class=(")?Mso[a-zA-Z]+(")?)/g;
+        var out = txt.replace(sS, ' ');
+        var cS = new RegExp('<!--(.*?)-->', 'gi');
+        out = out.replace(cS, '');
+        var tS = new RegExp('<(/)*(meta|link|span|\\?xml:|st1:|o:|font)(.*?)>', 'gi');
+        out = out.replace(tS, '');
+
+        var nbS = new RegExp('&nbsp;', 'gi');
+        out = out.replace(nbS, '');
+
+        var bT = ['style', 'script', 'applet', 'embed', 'noframes', 'noscript'];
+        for (var i = 0; i < bT.length; i++) {
+            tS = new RegExp('<' + bT[i] + '.*?' + bT[i] + '(.*?)>', 'gi');
+            out = out.replace(tS, '');
+        }
+        var bA = ['style', 'start'];
+        for (var ii = 0; ii < bA.length; ii++) {
+            var aS = new RegExp(' ' + bA[ii] + '="(.*?)"', 'gi');
+            out = out.replace(aS, '');
+        }
+        return out;
+    };
+
+    var cleanParagraphs = function (txt) {
+        var out = txt;
+
+        // remove paragraph tags and use <br/> instead
+        var sS = new RegExp('<(/p)>', 'gi');
+        var out = txt.replace(sS, '<br />');
+
+        var pS = new RegExp('<(/)*(p)(.*?)>', 'gi');
+        out = out.replace(pS, '');
+
+        return out;
+    };
+
+    var body = '<div class="form-group">' +
+                    '<label>' + 'Paste the word content below, then press the Insert button' + '</label>' +
+                    '<div contentEditable=true class="note-editor note-frame js-paste-area" style="height: 300px; overflow:hidden;" />' +
+                '</div>';
+    var footer = '<button href="#" class="btn btn-primary js-paste-word-btn" >' + 'Insert' + '</button>';
+
+    var $dialog = ui.dialog({
+        className: 'rockpastefromword-dialog',
+        title: 'Paste from Word',
+        body: body,
+        footer: footer
+    }).render().appendTo($(document.body));
+
+    $dialog.find('.js-paste-word-btn').on('click', { dialog: $dialog }, function (a) {
+        var $dialog = a.data.dialog;
+        ui.hideDialog($dialog);
+
+        context.invoke('editor.restoreRange');
+        var pastedContent = $dialog.find('.js-paste-area').html();
+
+        var cleaned = cleanText(pastedContent).trim();
+        var cleaned = cleanParagraphs(cleaned);
+        context.invoke('editor.pasteHTML', cleaned);
+    });
+
+    function doPasteFromWord(pasteEvent, mimeType) {
+        context.invoke('editor.saveRange');
+        mimeType = mimeType || "text/html";
+
+        // make the dialog transparent until we know for sure that we need to prompt and paste
+        $dialog.fadeTo(0, 0);
+
+        $dialog.find('.js-paste-area').html('');
+        ui.showDialog($dialog);
+        $dialog.find('.js-paste-area').focus();
+
+        var clipboardData = pasteEvent.originalEvent && ((typeof (pasteEvent.originalEvent.clipboardData) != 'undefined' && pasteEvent.originalEvent.clipboardData) || (typeof (window.clipboardData) != 'undefined' && window.clipboardData));
+
+        if (clipboardData && clipboardData.types) {
+            var types = clipboardData.types;
+            if (((types instanceof DOMStringList) && types.contains(mimeType)) || (types.indexOf && types.indexOf(mimeType) !== -1)) {
+                var htmlPasteContent = clipboardData.getData(mimeType)
+                $dialog.find('.js-paste-area').html(htmlPasteContent);
+                $dialog.find('.js-paste-word-btn').click();
+                return;
+            }
+        }
+
+        // if we are not allowed to directly call a Paste, prompt in the dialog
+        if (document.execCommand('Paste')) {
+            $dialog.find('.js-paste-word-btn').click();
+            return;
+        };
+
+        // if we weren't able to automatically take care of it, show the dialog
+        $dialog.fadeTo(0, 1);
+    }
+
+    // create button
+    var button = ui.button({
+        contents: '<i class="fa fa-file-word-o"/>',
+        className: 'js-rockpastefromword',
+        tooltip: 'Paste from Word',
+        click: function (a) {
+            doPasteFromWord(a);
+        }
+    });
+
+    return button.render();   // return button as jquery object 
+};
+var RockPasteText = function (context) {
+    var ui = $.summernote.ui;
+
+    var body = '<div class="form-group">' +
+                    '<label>' + 'Paste the content below, then press the Insert button to insert the content as plain text' + '</label>' +
+                    '<div contentEditable=true class="note-editor note-frame js-paste-area" style="height: 300px; overflow:hidden;" />' +
+                '</div>';
+    var footer = '<button href="#" class="btn btn-primary js-paste-text-btn" >' + 'Insert' + '</button>';
+
+    var $dialog = ui.dialog({
+        className: 'rockpastetext-dialog',
+        title: 'Paste as Plain Text',
+        body: body,
+        footer: footer
+    }).render().appendTo($(document.body));
+
+    $dialog.find('.js-paste-text-btn').on('click', { dialog: $dialog }, function (a) {
+        var $dialog = a.data.dialog;
+        ui.hideDialog($dialog);
+
+        context.invoke('editor.restoreRange');
+        var text = $dialog.find('.js-paste-area').text();
+
+        context.invoke('editor.insertText', text);
+    });
+
+    function doPasteText(pasteEvent) {
+        context.invoke('editor.saveRange');
+        // make the dialog transparent until we know for sure that we need to prompt and paste
+        $dialog.fadeTo(0, 0);
+
+        ui.showDialog($dialog);
+        $dialog.find('.js-paste-area').html('');
+        $dialog.find('.js-paste-area').focus();
+
+        var clipboardData = pasteEvent.originalEvent && ((typeof (pasteEvent.originalEvent.clipboardData) != 'undefined' && pasteEvent.originalEvent.clipboardData) || (typeof (window.clipboardData) != 'undefined' && window.clipboardData));
+
+        if (clipboardData && clipboardData.types) {
+            var types = clipboardData.types;
+            if (((types instanceof DOMStringList) && types.contains("text/plain")) || (types.indexOf && types.indexOf('text/plain') !== -1)) {
+                var textPasteContent = clipboardData.getData('text/plain')
+                $dialog.find('.js-paste-area').html(textPasteContent);
+                $dialog.find('.js-paste-text-btn').click();
+                return;
+            }
+        }
+
+        // if we are allowed to directly call a Paste, automatically paste and close the dialog
+        if (document.execCommand('Paste')) {
+            $dialog.find('.js-paste-text-btn').click();
+            return;
+        }
+        
+        // if we weren't able to automatically take care of it, show the dialog
+        $dialog.fadeTo(0, 1);
+    }
+
+    // create button
+    var button = ui.button({
+        contents: '<i class="fa fa-clipboard"/>',
+        className: 'js-rockpastetext',
+        tooltip: 'Paste Text',
+        click: function (a) {
+            doPasteText(a);
+        }
+    });
+
+    return button.render();   // return button as jquery object 
+};
