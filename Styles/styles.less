@@ -1,6 +1,8 @@
+
 // Fonts
 @heading: 'Poppins', sans-serif;
 @text: 'Roboto', sans-serif;
+@base-font-size: 1em;
 
 // Colors
 @main: rgba(88, 42, 114, 1);
@@ -10,15 +12,14 @@
 
 //Box Shadow
 .dropshadow{
-  box-shadow: 10px 10px 5px #888888;
+  box-shadow: 1px 1px 30px 1px #000;
 }
 .text-shadow{
     text-shadow: 15px 15px 30px #000;
 }
-.hide {
 
-  top: -9999px !important;
-  //left: -9999px !important;
+.row {
+  margin: 0px;
 }
 
 body {
@@ -32,10 +33,15 @@ body {
   top:0px;
   left:0px;
   width: 100%;
+  height: 90px;
   z-index: 500;
   color: white;
-  background-color: @main;
+  background-color: fade(@main,95%);
   position: fixed;
+  .dropshadow;
+  opacity: 0;
+  transition: opacity .5s;
+  z-index: 2;
 
   h1 {
     font-family: @heading;
@@ -53,6 +59,12 @@ body {
 @import "../Sections/double/double.less";
 
 
+
+@media screen (max-width: 500px) {
+    section#whatif  {
+      height: 25vh;
+    }
+}
 
 //delete when finished
 .fillspace {

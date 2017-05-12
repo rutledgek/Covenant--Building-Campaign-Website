@@ -1,35 +1,37 @@
 section#whatif {
-  background: url('../Assets/images/churchfront.JPG');
-  background-attachment: fixed;
-  background-position: 50% 400%;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background:
+    url('../Assets/images/churchfront.JPG');
+    background-attachment: fixed;
+    background-position: 50% 100%;
+    background-size: cover;
   width: 100%;
-  height: 400px;
+  height:300px;
   position: relative;
 
   h1 {
     font-family: @heading;
-    font-size: 48px;
+    font-size: @base-font-size*3;
     color:#fff;
     text-align:center;
     margin: 85px auto;
     z-index:2;
-    line-height: 100px;
+    line-height: @base-font-size*1.5;
     .text-shadow;
+    padding:10px;
   }
+
   strong {
-    font-size: 60px;
+    font-size: @base-font-size*1.4;
     font-weight: normal;
+    text-transform: uppercase;
   }
 
   .overlay {
     position: absolute;
-    background: fade(@main, 82%);
+    background: fade(@main, 95%);
     top:0;
     left:0;
-    width:100%;
-    height:100%;
+    bottom: 0;
+    right: 0;
   }
-
 }

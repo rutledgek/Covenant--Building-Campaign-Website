@@ -1,7 +1,6 @@
 
 #double {
   position:relative;
-  border-top: 1px solid darken(@main, 5%);
   .overlay {
       position: absolute;
       background: fade(@main, 82%);
@@ -28,9 +27,15 @@
         filter:contrast(20%);
 
   }
-
-  .row {
-    min-height:350px;
+  h2 {
+    font-family: @heading;
+    font-size: @base-font-size*2;
+    color:#fff;
+    text-align:center;
+    z-index:2;
+    line-height: @base-font-size*1.5;
+    .text-shadow;
+    padding:10px;
   }
 
   .left,.right {
