@@ -7,7 +7,7 @@ sr.reveal('#doubletitle', {
   easing: 'ease-out',
 })
 
-sr.reveal('.left', {
+sr.reveal('#left', {
   delay: 220,
   duration: 2000,
   origin: 'left',
@@ -21,4 +21,10 @@ sr.reveal('.right', {
   origin: 'bottom',
   distance: '50px',
   easing: 'ease-out',
+})
+
+sr.reveal('#quote1', {
+  duration: 2000,
+  easing: 'ease-out',
+
 })
