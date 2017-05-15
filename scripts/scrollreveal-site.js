@@ -1,7 +1,9 @@
+var scrollDuration = 1000;
+
 window.sr = ScrollReveal();
 
 sr.reveal('#doubletitle', {
-  duration: 1000,
+  duration: scrollDuration,
   origin: 'top',
   // distance: '100px',
   easing: 'ease-out',
@@ -9,7 +11,7 @@ sr.reveal('#doubletitle', {
 
 sr.reveal('#left', {
   delay: 220,
-  duration: 2000,
+  duration: scrollDuration,
   origin: 'left',
   distance: '100px',
   easing: 'ease-out',
@@ -17,14 +19,14 @@ sr.reveal('#left', {
 
 sr.reveal('.right', {
   delay: 200,
-  duration: 2000,
+  duration: scrollDuration,
   origin: 'bottom',
   distance: '50px',
   easing: 'ease-out',
 })
 
 sr.reveal('#quote1', {
-  duration: 2000,
+  duration: scrollDuration,
   easing: 'ease-out',
 
 })

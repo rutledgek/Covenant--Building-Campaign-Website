@@ -5,18 +5,22 @@
 @base-font-size: 1em;
 
 // Colors
-@main: rgba(88, 42, 114, 1);
-@second: #52154E;
-@third: #243B4A;
-@fourth: #805E73;
-@fifth: #87BCDE;
+@main: rgba(94, 53, 177, 1);
+@second: #9061e2;
+@third: #27057f;
+@accent: #ab47bc;
+@fill: #E1E2E1;
+
+
+@white-link: rgba(255,255,255,.80);
+@white-link-hover: rgba(255,255,255,1);
 
 //Box Shadow
 .dropshadow{
-  box-shadow: 1px 5px 10px 1px #000;
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0, .5);
 }
 .text-shadow{
-    text-shadow: 1px 5px 30px #000;
+    text-shadow: 2px 2px 30px rgba(0,0,0, .3);
 }
 
 .row {
@@ -39,8 +43,8 @@ body {
 
 .whatiftop {
   position: absolute;
-  top:0px;
-  left:0px;
+  top: 0px;
+  left: 0px;
   width: 100%;
   height: 100px;
   z-index: 500;
@@ -50,7 +54,7 @@ body {
   position: fixed;
   .dropshadow;
   opacity: 0;
-  transition: opacity 1s;
+  transition: all .5s;
   z-index: 2;
 
   h1 {
@@ -70,10 +74,11 @@ img {
 }
 
 @import "../Sections/WhateIfHeader/whatif.less";
-@import "../Sections/double/double.less";
+@import "../Sections/Kingswood/kingswood.less";
 @import "../Sections/single/single.less";
 @import "../Modules/toggle-nav.less";
 @import "../Modules/form.less";
+@import "../Modules/image_gallary.less";
 
 
 
@@ -82,10 +87,15 @@ img {
       height: 25vh;
     }
 }
+#move-navigation{
+  display:none;
+}
 
-//delete when finished
-.fillspace {
-  min-height:600px;
-
+.alert-success {
+  color: darken(@fill, 50%);
+  background-color: transparent;
+  font-size: @base-font-size*1.65;
+  text-shadow: none;
+  border: none;
 
 }

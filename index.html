@@ -10,41 +10,58 @@
   </head>
   <body>
     <div id="toggle-navigation">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
-    <div id="nav-toggle">
-      <input type="checkbox" id="toggle-navigation-menu"><span></span>
+      <input type="checkbox" id="toggle-navigation-menu">
+      <toggle-test> 
+        <div id="toggle-navigation-menu">
+          <ul></ul>
+        </div>
+        <label for="toggle-navigation-menu"></label>
+      </toggle-test>
     </div>
     <section id="whatif">
-      <div class="overlay">
-        <h1 id="main"> <strong>Covenant Church Imagines</strong><br>What If...</h1>
+      <div class="overlay"></div>
+      <div class="content">
+        <h1 id="main"> <strong>Covenant Church Imagines</strong><br><br><a href="#" id="whatifbutton">
+            <div class="btn">
+              <div class="bounce-container">
+                <p>What If...</p>
+              </div>
+            </div></a></h1>
       </div>
     </section>
-    <section id="double">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <h2 id="doubletitle">Test</h2>
+    <section id="first">
+      <section class="doublesection">
+        <div class="overlay"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <h2 class="doubletitle">...we renovated Kingswood?</h2>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-sm-12" id="left">
-            <div class="left" id="double-left"><img src="http://placehold.it/350x300"></div>
-          </div>
-          <div class="col-md-6 col-sm-12" id="right">
-            <div class="right">
-              <ul>
-                <li>Eadem nunc mea adversum te oratio est.</li>
-                <li>Positum est a nostris in iis esse rebus, quae secundum naturam essent, non dolere;</li>
-                <li>Qui bonum omne in virtute ponit, is potest dicere perfici beatam vitam perfectione virtutis;</li>
-                <li>Tenesne igitur, inquam, Hieronymus Rhodius quid dicat esse summum bonum, quo putet omnia </li>
-                <li>Sic enim censent, oportunitatis esse beate vivere.</li>
-              </ul>
+          <div class="row">
+            <div class="col-md-6 col-sm-12 left">
+              <div class="left double-left">
+                <div><img src="https://admin.covumc.com/Content/capitalCampaign/images/buildingPosters/1-Kingswood/kingswood1.png" onclick="openimg();showPicture(this.src,this.alt)"></div>
+                <div><img src="https://admin.covumc.com/Content/capitalCampaign/images/buildingPosters/1-Kingswood/kingswood2.png" onclick="openimg();showPicture(this.src,this.alt)"></div>
+                <div><img src="https://admin.covumc.com/Content/capitalCampaign/images/buildingPosters/1-Kingswood/kingswood3.png" onclick="openimg();showPicture(this.src,this.alt)"></div>
+                <div><img src="https://admin.covumc.com/Content/capitalCampaign/images/buildingPosters/1-Kingswood/kingswood4.png" onclick="openimg();showPicture(this.src,this.alt)"></div>
+                <div><img src="https://admin.covumc.com/Content/capitalCampaign/images/buildingPosters/1-Kingswood/kingswood5.png" onclick="openimg();showPicture(this.src,this.alt)"></div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 right">
+              <div class="right">
+                <ul>
+                  <li>ENHANCED ACOUSTICS will allow  for more focus and events </li>
+                  <li>AIR CONDITIONING will allow  for summer ministry  </li>
+                  <li>HANDICAP BATHROOMS will serve any and all who need them</li>
+                  <li>FIXING THE CEILING will invite volleyball and youth activities  </li>
+                  <li>FIXING A BOUNCY FLOOR will provide multi-use capabilities </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </section>
     <section class="clearfix" id="single">
       <div class="col-md-12 col-sm-12 clearfix">
@@ -57,7 +74,12 @@
     <div class="whatiftop">
       <h1>What If....</h1>
     </div>
-    <div class="fillspace"></div>
+    <div class="imgmodal">
+      <div class="imgmodal-content"><a onclick="closeimg()">
+          <div class="fa fa-times" aria-hidden="true"></div></a>
+        <div class="modalimg"></div>
+      </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
