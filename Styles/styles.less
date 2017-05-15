@@ -6,7 +6,7 @@
 
 // Colors
 @main: rgba(94, 53, 177, 1);
-@second: #9061e2;
+@second: darken(@main, 15%);
 @third: #27057f;
 @accent: #ab47bc;
 @fill: #E1E2E1;
@@ -74,8 +74,8 @@ img {
 }
 
 @import "../Sections/WhateIfHeader/whatif.less";
-@import "../Sections/Kingswood/kingswood.less";
-@import "../Sections/single/single.less";
+@import "../Sections/section.less";
+@import "../Sections/areas/quote.less";
 @import "../Modules/toggle-nav.less";
 @import "../Modules/form.less";
 @import "../Modules/image_gallary.less";
@@ -98,4 +98,17 @@ img {
   text-shadow: none;
   border: none;
 
+}
+.container_full{
+  background-color: @fill;
+  section {
+    padding-top:40px;
+  }
+  &section:first-of-type{
+      // padding-top: 110px !important;
+  }
+
+}
+section#first{
+      padding-top: 60px;
 }

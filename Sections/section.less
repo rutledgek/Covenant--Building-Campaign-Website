@@ -1,7 +1,6 @@
 
 .doublesection {
   position:relative;
-  padding-top: 100px;
   padding-bottom: 20px;
   color: #000;
   background-color: @fill;
@@ -9,6 +8,10 @@
   transform-style: preserve-3d;
   ul li {
     line-height: @base-font-size *1.9;
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
   // font-size: @base-font-size*.01;
   // .overlay {
@@ -55,11 +58,18 @@
     // color: white;
     text-align: center;
     font-size: @base-font-size*1.5;
-    padding: 10px 0px;
+    padding: 10px 10px;
 
   }
   .left {
     margin-right: 0px;
+    text-align: left;
+    float: left;
+    li{
+      padding-bottom: 15px;
+      line-height: @base-font-size*1.3;
+    }
+
   }
   .right{
     margin-left: 0px;
@@ -70,17 +80,22 @@
       line-height: @base-font-size*1.3;
     }
   }
-  .double-left {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
+  .images {
+    column-count: 2;
+    column-gap: 0;
+    // display: flex;
+    // flex-direction: column;
+    // flex-flow: column wrap;
+    // flex-wrap: wrap;
+    // justify-content: space-around;
 
 
     div{
-      width: 50%;
+      // width: 100%;
       padding: 10px;
       transition: all .5s;
+      break-inside: avoid;
+      padding: 8px;
       &:hover{
         transform: scale(1.05) rotate(2deg);
       }
@@ -91,6 +106,7 @@
     img {
       width: 100%;
       height: auto;
+      //  padding: 10px;
       .dropshadow;
       border-radius: 4px;
       cursor:pointer;

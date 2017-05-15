@@ -9,7 +9,7 @@ sr.reveal('#doubletitle', {
   easing: 'ease-out',
 })
 
-sr.reveal('#left', {
+sr.reveal('.left', {
   delay: 220,
   duration: scrollDuration,
   origin: 'left',

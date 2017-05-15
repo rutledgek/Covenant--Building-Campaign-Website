@@ -11,21 +11,28 @@ html(lang='en')
   body
     #toggle-navigation
       input(type="checkbox" id="toggle-navigation-menu")
-      toggle-test  
+      toggle-test
         #toggle-navigation-menu
           ul
         label(for="toggle-navigation-menu")
-            
     include ./Sections/WhateIfHeader/whatif.jade
-    section#first
-      include ./Sections/kingswood/kingswood.jade
-    include ./Sections/single/single.jade
-
+    .container_full
+      section#first
+        include ./Sections/areas/kingswood.jade
+      include ./Sections/areas/kingswoodquote.jade
+      include ./Sections/areas/epworth.jade
+      include ./Sections/areas/epworthquote.jade
+      include ./Sections/areas/parking.jade
+      include ./Sections/areas/parkingquote.jade
+      include ./Sections/areas/elevator.jade
+      include ./Sections/areas/elevatorquote.jade
+      include ./Sections/areas/office_level.jade
+      include ./Sections/areas/office_level_quote.jade
     .whatiftop
       h1 What If....
-    
+
     include Modules/image_gallary_modal.jade
-    
+
 
     script(src="https://code.jquery.com/jquery-3.2.1.js")
     script(src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js")
