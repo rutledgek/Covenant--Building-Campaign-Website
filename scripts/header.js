@@ -43,11 +43,6 @@
         scrollTop: $("#first").offset().top}, 1500);
 });
 
-
-
-
-
-
 })(jQuery);
 
 function openimg() {
@@ -58,12 +53,7 @@ function closeimg() {
     $('.imgmodal, .modalimg').fadeOut(250, function(){
       $('.modalimg').empty();
       $('.modalCaption').remove();
-
-
     });
-    // $('.imgmodal').css('display',"none");
-
-
 }
 
 function showPicture(_src,_alt) {

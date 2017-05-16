@@ -2,7 +2,7 @@ var scrollDuration = 1000;
 
 window.sr = ScrollReveal();
 
-sr.reveal('#doubletitle', {
+sr.reveal('.doubletitle', {
   duration: scrollDuration,
   origin: 'top',
   // distance: '100px',
@@ -25,7 +25,8 @@ sr.reveal('.right', {
   easing: 'ease-out',
 })
 
-sr.reveal('#quote1', {
+sr.reveal('.quote1', {
+    delay: 200,
   duration: scrollDuration,
   easing: 'ease-out',
 
